@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { generateToken } from "../utils/jwt.js";
 
 import {
   createUser,
@@ -21,16 +22,7 @@ export const registerUser = async ({ name, email, password }) => {
     password: hashedPassword,
   });
 
-  const token = jwt.sign(
-    {
-      id: user._id,
-      email: user.email,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: "7d",
-    }
-  );
+  const token = generateToken(user);
 
   return {
     token,
@@ -55,16 +47,7 @@ export const loginUser = async ({ email, password }) => {
     throw new Error("Invalid Credentials");
   }
 
-  const token = jwt.sign(
-    {
-      id: user._id,
-      email: user.email,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: "7d",
-    }
-  );
+  const token = generateToken(user);
 
   return {
     token,
